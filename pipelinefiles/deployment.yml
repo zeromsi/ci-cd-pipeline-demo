@@ -1,0 +1,47 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: cicd
+  name: cicd
+  namespace: cicd-project
+spec:
+  replicas: 1
+  selector:
+
+    app: cicd
+    deploymentconfig: cicd
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cicd
+        deploymentconfig: cicd
+    spec:
+      containers:
+        - image: docker-registry.default.svc:5000/cicd-project/cicd
+          imagePullPolicy: Always
+          name: cicd
+          ports:
+            - containerPort: 8001
+              protocol: TCP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - cicd
+        from:
+          kind: ImageStreamTag
+          name: 'cicd:latest'
+          namespace: cicd-project
+      type: ImageChange
