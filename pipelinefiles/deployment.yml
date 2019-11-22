@@ -27,7 +27,7 @@ spec:
           imagePullPolicy: Always
           name: cicd
           ports:
-            - containerPort: 8001
+            - containerPort: 8081
               protocol: TCP
       dnsPolicy: ClusterFirst
       restartPolicy: Always

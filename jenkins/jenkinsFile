@@ -25,7 +25,7 @@ pipeline{
     stage ('build image') {
       steps{
       sh '''
-          oc start-build demo-build --from-dir=. --follow
+          oc start-build cicd-build --from-dir=. --follow
         '''
       }
     }    
